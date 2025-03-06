@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Formulario</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Registro de Formulario</title>
 
-    <style>
+        <style>
         body {
             display: flex;
             justify-content: center;
@@ -32,7 +32,7 @@
             color: #333;
         }
 
-        input {
+        input, select {
             width: calc(100% - 22px);
             padding: 10px;
             margin-top: 10px;
@@ -62,17 +62,22 @@
             margin-top: 10px;
         }
     </style>
-</head>
+    </head>
 
-<body>
-    <div class="container">
-        <h1>Registro</h1>
-        <form>
-            <input type="email" id="email" placeholder="Ingresa tu email" required>
-            <button type="submit" id="btn-submit">Iniciar Formulario</button>
-        </form>
-    </div>
-    <script type="module" src="main.js"></script>
-</body>
+    <body>
+        <div class="container">
+            <h1>Registro</h1>
+            <form>
+                <input type="email" id="email" placeholder="Ingresa tu email"
+                    required>
+                <select id="form-select">
+                    <option value>Selecciona un formulario</option>
+                </select>
+                <button type="submit" id="btn-submit">Iniciar
+                    Formulario</button>
+            </form>
+        </div>
+        <script type="module" src="main.js"></script>
+    </body>
 
 </html>
