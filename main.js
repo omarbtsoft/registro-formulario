@@ -39,10 +39,13 @@ async function handleSubmit(e) {
         };
 
         await setDoc(emailRef, data);
+        btnSubmit.style.cursor = "pointer";
+        btnSubmit.style.opacity = 1;
+        btnSubmit.innerText = "Iniciar Formulario";
+        btnSubmit.disabled = false;
         window.location.href = `https://docs.google.com/forms/d/e/1FAIpQLScA7vFoBHWxkpjBr-ybPseVcOL9EhyQUW9j_93bTbfS5-sPyQ/viewform?emailAddress=${encodeURIComponent(email)}`;
     } catch (error) {
-        console.error("Error al guardar los datos: ", error);
-        alert("Hubo un error al procesar tu solicitud. Por favor, intenta nuevamente.");
+        
     }
 }
 
