@@ -6,77 +6,349 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Registro de Formulario</title>
 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+            rel="stylesheet">
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f3f4f6;
-            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 50%, #dbeafe 100%);
+            font-family: 'Inter', Arial, sans-serif;
+            color: #1f2937;
         }
 
         .container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            background: #ffffff;
+            padding: 32px 28px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .brand-name {
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .brand-name .bt {
+            color: #1f2937;
+        }
+
+        .brand-name .soft {
+            color: #9ca3af;
+        }
+
+        .brand-slogan {
+            margin: 4px 0 0;
+            font-size: 13px;
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        .brand-divider {
+            height: 4px;
+            width: 70px;
+            margin: 14px auto 0;
+            background: #3b82f6;
+            border-radius: 4px;
         }
 
         h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #333;
+            margin: 0 0 6px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #111827;
+            text-align: center;
         }
 
-        input, select {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
+        .subtitle {
+            margin: 0 0 24px;
+            font-size: 14px;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        .field {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 15px;
+            font-family: inherit;
+            background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
 
         button {
             width: 100%;
-            padding: 10px;
-            margin-top: 20px;
-            border-radius: 5px;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 8px;
             border: none;
             background: #3b82f6;
             color: white;
             cursor: pointer;
             font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            transition: background 0.2s, opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        button:hover {
+        button:hover:not(:disabled) {
             background: #2563eb;
         }
 
-        .error {
-            color: red;
-            margin-top: 10px;
+        button:disabled,
+        button.loading {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        button.loading .spinner {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== Vista del formulario embebido ===== */
+        .form-view {
+            display: none;
+            position: fixed;
+            inset: 0;
+            flex-direction: column;
+            background: #f3f4f6;
+            z-index: 1000;
+        }
+
+        .form-view.active {
+            display: flex;
+        }
+
+        .timer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 16px;
+            background: #2b3a8c;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .timer-brand {
+            text-align: left;
+            line-height: 1.1;
+        }
+
+        .timer-brand .timer-brand-name {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .timer-brand .timer-brand-name .bt {
+            color: #ffffff;
+        }
+
+        .timer-brand .timer-brand-name .soft {
+            color: #aab4e8;
+        }
+
+        .timer-brand .timer-brand-slogan {
+            margin: 2px 0 0;
+            font-size: 11px;
+            font-style: italic;
+            font-weight: 400;
+            color: #cdd4f0;
+        }
+
+        .timer-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timer-label {
+            font-weight: 500;
+            color: #d1d5db;
+        }
+
+        .timer {
+            font-variant-numeric: tabular-nums;
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            background: #1f2937;
+            padding: 4px 12px;
+            border-radius: 8px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .timer.warning {
+            background: #b91c1c;
+            color: #fff;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .iframe-wrap {
+            position: relative;
+            flex: 1;
+        }
+
+        #form-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: rgba(17, 24, 39, 0.85);
+            color: #fff;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .overlay.active {
+            display: flex;
+        }
+
+        .overlay h2 {
+            font-size: 28px;
+            margin: 0 0 10px;
+        }
+
+        .overlay p {
+            font-size: 16px;
+            color: #e5e7eb;
+            margin: 0;
         }
     </style>
     </head>
 
     <body>
-        <div class="container">
+        <div class="container" id="registro-card">
+            <div class="brand">
+                <div class="brand-name"><span class="bt">bt</span><span
+                        class="soft">soft</span></div>
+                <p class="brand-slogan">Transformando ideas en código</p>
+                <div class="brand-divider"></div>
+            </div>
             <h1>Registro</h1>
+            <p class="subtitle">Ingresa tu email y elige el formulario para
+                comenzar.</p>
             <form>
-                <input type="email" id="email" placeholder="Ingresa tu email"
-                    required>
-                <select id="form-select">
-                    <option value>Selecciona un formulario</option>
-                </select>
-                <button type="submit" id="btn-submit">Iniciar
-                    Formulario</button>
+                <div class="field">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email"
+                        placeholder="nombre@dominio.com" required>
+                </div>
+                <div class="field">
+                    <label for="form-select">Formulario</label>
+                    <select id="form-select">
+                        <option value="">Selecciona un formulario</option>
+                    </select>
+                </div>
+                <button type="submit" id="btn-submit">
+                    <span class="spinner"></span>
+                    <span class="btn-text">Iniciar Formulario</span>
+                </button>
             </form>
         </div>
+
+        <div class="form-view" id="form-view">
+            <div class="timer-bar">
+                <div class="timer-brand">
+                    <div class="timer-brand-name"><span class="bt">bt</span><span
+                            class="soft">soft</span></div>
+                    <p class="timer-brand-slogan">Transformando ideas en
+                        código</p>
+                </div>
+                <div class="timer-info">
+                    <span class="timer-label">Tiempo restante:</span>
+                    <span class="timer" id="timer">00:00</span>
+                </div>
+            </div>
+            <div class="iframe-wrap">
+                <iframe id="form-iframe" title="Formulario"></iframe>
+                <div class="overlay" id="time-up-overlay">
+                    <h2>⏱ Se acabó el tiempo</h2>
+                    <p>El tiempo para completar el formulario ha finalizado.</p>
+                </div>
+            </div>
+        </div>
+
         <script type="module" src="main.js"></script>
     </body>
 
